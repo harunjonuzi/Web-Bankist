@@ -33,3 +33,12 @@ document.addEventListener("keydown", function (e) {
     closeModal();
   }
 });
+
+////////////////////
+let variable = 5;
+
+if (variable) {
+  console.log("Yay, it's TRUE!");
+} else {
+  console.log("Damn, it's FALSE!");
+}
