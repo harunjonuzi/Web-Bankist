@@ -34,11 +34,9 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-////////////////////
-let variable = 5;
-
-if (variable) {
-  console.log("Yay, it's TRUE!");
-} else {
-  console.log("Damn, it's FALSE!");
-}
+//////////////////
+/// PlayGround ///
+//////////////////
+console.log(document.documentElement);
+console.log(document.head);
+console.log(document.body);
