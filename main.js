@@ -40,3 +40,9 @@ document.addEventListener("keydown", function (e) {
 console.log(document.documentElement);
 console.log(document.head);
 console.log(document.body);
+
+const allSections = document.getElementById("section--2");
+console.log(allSections);
+
+const allButtons = document.getElementsByTagName("button");
+console.log(allButtons);
