@@ -38,65 +38,98 @@ document.addEventListener("keydown", function (e) {
 /// PlayGround ///
 //////////////////
 
-// ! Selecting elements
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
-const header = document.querySelector(".header");
+const btnScrollTo = document.querySelector(".btn--scroll-to");
+const section1 = document.querySelector("#section--1");
 
-// Example 1.0
-const allSections = document.querySelectorAll(".section");
-console.log(allSections); // Nodelist
+btnScrollTo.addEventListener("click", function (e) {
+  const section1coords = section1.getBoundingClientRect();
 
-// Example 2.0
-document.getElementById("section--1");
-const allButtons = document.getElementsByTagName("button");
-console.log(allButtons); // HTML Collection
+  // log the coordinates
+  console.log(section1coords);
+  console.log(e.target.getBoundingClientRect());
 
-// ! Creating and inserting elements
-const message = document.createElement("div");
-message.classList.add("cookie-message");
-// message.textContent = "We use cookiees!";
-message.innerHTML =
-  'We use cookiees for improved functionality and safety for our users and clients. <button class="btn btn--close-cookie">Got it!</button>';
+  console.log("Current scroll (X/Y)", window.pageXOffset, window.pageYOffset);
 
-// header.prepend(message);
-header.append(message);
-// header.append(message.cloneNode(true));
+  console.log(
+    "height/width viewport",
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
 
-// header.before(message);
-// header.after(message);
+  // window.scrollTo(
+  //   section1coords.left + window.pageXOffset,
+  //   section1coords.top + window.pageYOffset
+  // );
 
-// ! Delete elements
-document
-  .querySelector(".btn--close-cookie")
-  .addEventListener("click", function () {
-    message.remove();
-  });
+  // ! Old way , smooth scrolling
+  // window.scrollTo({
+  //   left: section1coords.left + window.pageXOffset,
+  //   top: section1coords.top + window.pageYOffset,
+  //   behavior: "smooth",
+  // });
 
-// ! Styles
-message.style.backgroundColor = "#37383d";
-message.style.width = "120%";
+  // ! New way , smooth scrolling
+  section1.scrollIntoView({ behavior: "smooth" });
+});
 
-console.log(message.style.height); // Doesn't work because it is not inline styles
-console.log(message.style.backgroundColor); // Worked because it's inline
+// ! Types of Events and event handlers
+// const h1 = document.querySelector("h1");
 
-console.log(getComputedStyle(message).color);
-console.log(getComputedStyle(message).height);
+// * Version A (Adding function from inside)
+// h1.addEventListener(
+//   "mouseenter",
+//   function (e) {
+//     alert("addEventListener: You are reading the heading!");
+//   },
+//   { once: true }
+// );
 
-message.style.height =
-  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + "px";
+// * Version B (Adding function from the outside)
+// const alertH1 = function (e) {
+//   alert("addEventListener: Great! You are reading the heading :D!");
+//   // We can remove the event here
+//   // h1.removeEventListener("mouseenter", alertH1);
+// };
+// h1.addEventListener("mouseenter", alertH1);
 
-document.documentElement.style.setProperty("--color-primary", "orangered");
+// We can remove the event anywhere
+// setTimeout(() => h1.removeEventListener("mouseenter", alertH1), 5000);
 
-// ! Attributes
-const logo = document.querySelector(".nav__logo");
-console.log(logo.alt);
-console.log(logo.src);
-console.log(logo.className);
+// * Other
+// h1.onmouseenter = function (e) {
+//   alert("onmouseenter: You are reading the heading!");
+// };
 
-logo.alt = "Beautiful minimalist logo";
+// const buttonZ = document.querySelector(".btn--text");
+// buttonZ.addEventListener("click", function () {
+//   alert("You clicked a button on the page!");
+// });
 
-// Non-standart
-console.log(logo.designer);
-console.log(logo.getAttribute("designer"));
+// ! Event Bubbling & Capturing
+// rgb(255,255,255)
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+console.log(randomInt(0, 10));
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+console.log(randomColor());
+
+document.querySelector(".nav__link").addEventListener("click", function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log("LINK", e.target, e.currentTarget);
+  console.log(e.currentTarget === this);
+  e.stopPropagation();
+});
+
+document.querySelector(".nav__links").addEventListener("click", function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log("LINKSS", e.target, e.currentTarget);
+});
+
+document.querySelector(".nav").addEventListener("click", function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log("NAVV", e.target, e.currentTarget);
+});
