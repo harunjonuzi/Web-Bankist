@@ -183,3 +183,57 @@ nav.addEventListener("mouseover", function (e) {
 nav.addEventListener("mouseout", function (e) {
   handleHover(e, 1);
 });
+
+// * 7.0 Bad Way - Sticky navigation
+// 7.1 Bad way of doing it, it fires scroll event all the time
+// const initialCoords = section1.getBoundingClientRect();
+// // console.log(initialCoords);
+
+// window.addEventListener("scroll", function () {
+//   console.log(window.scrollY);
+
+//   if (window.scrollY > initialCoords.top) {
+//     nav.classList.add("sticky");
+//   } else {
+//     nav.classList.remove("sticky");
+//   }
+// });
+
+// * 8.0 Good Way - Sticky navigation - Observer API
+
+// Example 01
+// const obsCallback = function (entries, observer) {
+//   entries.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+
+// const obsOptions = {
+//   threshold: 0.1,
+// };
+
+// * 8.1 Separating callback from options
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+// Sticky Nav
+const header = document.querySelector(".header");
+
+const obsCallback = function (entries) {
+  const entry = entries[0];
+  console.log(entry);
+
+  if (entry.isIntersecting) {
+    nav.classList.remove("sticky");
+  } else {
+    nav.classList.add("sticky");
+  }
+};
+
+const headerObserver = new IntersectionObserver(obsCallback, {
+  root: null,
+  threshold: 0,
+  rootMargin: "-90px",
+});
+
+headerObserver.observe(header);
