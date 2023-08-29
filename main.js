@@ -1,6 +1,4 @@
 "use strict";
-///////////////////////////////////////
-// * 1.0 Selecting dom elements
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".btn--close-modal");
@@ -12,6 +10,9 @@ const tabs = document.querySelectorAll(".operations__tab");
 const tabsContainer = document.querySelector(".operations__tab-container");
 const tabsContent = document.querySelectorAll(".operations__content");
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 2.0 Modal window
 const openModal = function (e) {
   e.preventDefault(); // prevent default behaviour of the link
@@ -28,6 +29,9 @@ const closeModal = function () {
 // for (let i = 0; i < btnsOpenModal.length; i++)
 //   btnsOpenModal[i].addEventListener("click", openModal);
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 3.0 Close modal forEach method
 btnsOpenModal.forEach((btn) => btn.addEventListener("click", openModal));
 btnCloseModal.addEventListener("click", closeModal);
@@ -38,6 +42,9 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 4.0 Smooth scrolling
 // ? With Event Delegation
 // TODO Add event listener to common parent element
@@ -77,6 +84,9 @@ document
 //   });
 // });
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 4.1 Smooth scrolling specific button Learn more
 btnScrollTo.addEventListener("click", function (e) {
   const section1coords = section1.getBoundingClientRect();
@@ -108,6 +118,9 @@ btnScrollTo.addEventListener("click", function (e) {
   // );
 });
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 5.0 Tabbed Component
 
 // TODO With event Delegation
@@ -143,8 +156,10 @@ tabsContainer.addEventListener("click", function (e) {
 //   })
 // );
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 6.0 Mouseover nav links
-
 // const handleHover = function (e) {
 //   if (e.target.classList.contains("nav__link")) {
 //     const link = e.target;
@@ -184,6 +199,9 @@ nav.addEventListener("mouseout", function (e) {
   handleHover(e, 1);
 });
 
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
 // * 7.0 Bad Way - Sticky navigation
 // 7.1 Bad way of doing it, it fires scroll event all the time
 // const initialCoords = section1.getBoundingClientRect();
@@ -218,10 +236,11 @@ nav.addEventListener("mouseout", function (e) {
 
 // Sticky Nav
 const header = document.querySelector(".header");
+const navHeight = nav.getBoundingClientRect().height;
 
 const obsCallback = function (entries) {
   const entry = entries[0];
-  console.log(entry);
+  // console.log(entry);
 
   if (entry.isIntersecting) {
     nav.classList.remove("sticky");
@@ -233,7 +252,182 @@ const obsCallback = function (entries) {
 const headerObserver = new IntersectionObserver(obsCallback, {
   root: null,
   threshold: 0,
-  rootMargin: "-90px",
+  rootMargin: `-${navHeight}px`,
 });
 
 headerObserver.observe(header);
+
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
+// * 9 Reveal Sections
+const allSections = document.querySelectorAll(".section");
+
+const sectionCallback = function (entries, observer) {
+  const [entry] = entries;
+
+  // console.log(entries);
+  // console.log(observer);
+
+  if (!entry.isIntersecting) return; // guard clause
+  entry.target.classList.remove("section--hidden");
+  observer.unobserve(entry.target); // Stop observing after observing
+};
+
+const sectionObserver = new IntersectionObserver(sectionCallback, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
+
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
+// * 10 Lazy loading images
+const imgTargets = document.querySelectorAll("img[data-src]");
+
+const imgCallback = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  // We did this so people with low internet only remove filter once the picture is fully loaded
+  entry.target.addEventListener("load", function () {
+    entry.target.classList.remove("lazy-img");
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(imgCallback, {
+  root: null,
+  threshold: 0,
+  rootMargin: "200px",
+});
+
+imgTargets.forEach((image) => {
+  imgObserver.observe(image);
+});
+
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
+// * 11 Slides section
+const slides = document.querySelectorAll(".slide");
+const btnLeft = document.querySelector(".slider__btn--left");
+const btnRight = document.querySelector(".slider__btn--right");
+const dotContainer = document.querySelector(".dots");
+
+let curSlide = 0;
+const maxSlide = slides.length - 1;
+
+// Functions
+const createDots = function () {
+  slides.forEach(function (_, index) {
+    dotContainer.insertAdjacentHTML(
+      "beforeend",
+      `<button class="dots__dot" data-slide="${index}"></button>`
+    );
+  });
+};
+
+const activateDot = function (slide) {
+  document
+    .querySelectorAll(".dots__dot")
+    .forEach((dot) => dot.classList.remove("dots__dot--active"));
+
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add("dots__dot--active");
+};
+
+// 11.1 goToSlide function, starting position
+const goToSlide = function (slideNum) {
+  slides.forEach(
+    (slide, index) =>
+      (slide.style.transform = `translateX(${100 * (index - slideNum)}%)`)
+  );
+};
+
+// Default state goToSlide(0), loads the slide from the first slide
+// 0%, 100%, 200%
+
+// -100%, 0%, 100%
+// -200%, -100%, 0
+
+// 11.2 nextSlide function
+const nextSlide = function () {
+  if (curSlide === maxSlide) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+
+  goToSlide(curSlide);
+  activateDot(curSlide);
+};
+
+// 11.3 prevSlide function
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide;
+  } else {
+    curSlide--;
+  }
+
+  goToSlide(curSlide);
+  activateDot(curSlide);
+};
+
+// Initialization
+const init = function () {
+  goToSlide(0);
+  createDots();
+  activateDot(0);
+};
+
+init();
+
+// Event handlers
+btnRight.addEventListener("click", nextSlide);
+btnLeft.addEventListener("click", prevSlide);
+
+document.addEventListener("keydown", function (e) {
+  console.log(e);
+  if (e.key === "ArrowLeft") prevSlide();
+  if (e.key === "ArrowRight") nextSlide();
+});
+
+dotContainer.addEventListener("click", function (e) {
+  if (e.target.classList.contains("dots__dot")) {
+    const slide = e.target.dataset.slide;
+    goToSlide(slide);
+    activateDot(slide);
+  }
+});
+
+//////////////////////////////
+////🚧///NEW SECTION///🚧////
+//////////////////////////////
+
+// * 12 Lifecycle DOM Events
+document.addEventListener("DOMContentLoaded", function (e) {
+  console.log("HTML parsed and DOM tree built!", e);
+});
+
+window.addEventListener("load", function (e) {
+  console.log("Page fully loaded", e);
+});
+
+// window.addEventListener("beforeunload", function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue = ""; // Devs used to abuse this message, so now we can not change that popup message
+// });
