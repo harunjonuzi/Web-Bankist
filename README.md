@@ -4,7 +4,7 @@
 
 # Website for Bankist
 
-- This project is based upon the previous App-Bankist that I made following a course to create an application that resembles a real life user experience for banking systems.
+- This project is an extension of the prior endeavor, App-Bankist, which I developed by synthesizing the insights gained from a series of educational courses. The objective herein was to craft an application that emulates an authentic user experience within the realm of banking systems.
 
 ## Table of contents
 
@@ -15,11 +15,19 @@
 
 ## Overview
 
+![Screenshot-1](<img/Web-Bankist(Overview).png>)
+
 ## Installation
 
 - Fork/clone the project from GitHub and start using it right away.
 
 ## Features
+
+- Smooth scrooling
+- Event delegation
+- Lazy loading for performance
+- Separate callback from options
+- Animations
 
 ## Contributing
 
