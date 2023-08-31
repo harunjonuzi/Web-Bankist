@@ -29,11 +29,10 @@ const closeModal = function () {
 // for (let i = 0; i < btnsOpenModal.length; i++)
 //   btnsOpenModal[i].addEventListener("click", openModal);
 
-//////////////////////////////
-////🚧///NEW SECTION///🚧////
-//////////////////////////////
-// * 3.0 Close modal forEach method
+// 2.1 Close modal forEach method
+// We add the open and close modal for all the buttons that have .btn--show-modal in their class
 btnsOpenModal.forEach((btn) => btn.addEventListener("click", openModal));
+
 btnCloseModal.addEventListener("click", closeModal);
 overlay.addEventListener("click", closeModal);
 document.addEventListener("keydown", function (e) {
@@ -45,25 +44,37 @@ document.addEventListener("keydown", function (e) {
 //////////////////////////////
 ////🚧///NEW SECTION///🚧////
 //////////////////////////////
-// * 4.0 Smooth scrolling
-// ? With Event Delegation
-// TODO Add event listener to common parent element
-// TODO Determine what element originated the event
+// * 3.0 Smooth scrolling
+// With Event Delegation
+// Add event listener to common parent element
+// Determine what element originated the event
 
+// document.querySelector("body").addEventListener("click", function (e) {
+//   console.log(e.target);
+// });
+
+// Attach a click event listener to the element with the class "nav__links"
 document
   .querySelector(".nav__links")
   .addEventListener("click", function (event) {
+    // Prevent the default behavior (usually navigating to a new page) when a link is clicked
     event.preventDefault();
 
-    const clickElement = event.target;
+    // Identify the exact element that was clicked within the ".nav__links" container
+    const clickedElement = event.target;
 
-    // TODO Matching strategy
-    if (clickElement.classList.contains("nav__link")) {
-      const targetId = clickElement.getAttribute("href");
+    // Check if the clicked element has the class "nav__link"
+    if (clickedElement.classList.contains("nav__link")) {
+      // Retrieve the value of the "href" attribute from the clicked link, like "#section--1" or "#section--2"
+      const targetId = clickedElement.getAttribute("href");
+
+      // Find the HTML element associated with the target ID, "#section--1" or "#section--2"
       const targetElement = document.querySelector(targetId);
-      console.log(targetId);
+      console.log(targetElement); // Example: <section class='section' id='section--#'></section>
 
+      // If the target element exists in the DOM
       if (targetElement) {
+        // Scroll smoothly to the target element, creating a smooth scrolling effect
         targetElement.scrollIntoView({
           behavior: "smooth",
         });
@@ -90,7 +101,7 @@ document
 // * 4.1 Smooth scrolling specific button Learn more
 btnScrollTo.addEventListener("click", function (e) {
   const section1coords = section1.getBoundingClientRect();
-  console.log(section1coords);
+  // console.log(section1coords);
 
   // New way , smooth scrolling
   section1.scrollIntoView({ behavior: "smooth" });
@@ -419,11 +430,11 @@ dotContainer.addEventListener("click", function (e) {
 
 // * 12 Lifecycle DOM Events
 document.addEventListener("DOMContentLoaded", function (e) {
-  console.log("HTML parsed and DOM tree built!", e);
+  // console.log("HTML parsed and DOM tree built!", e);
 });
 
 window.addEventListener("load", function (e) {
-  console.log("Page fully loaded", e);
+  // console.log("Page fully loaded", e);
 });
 
 // window.addEventListener("beforeunload", function (e) {
