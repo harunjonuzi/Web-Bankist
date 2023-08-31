@@ -45,9 +45,7 @@ document.addEventListener("keydown", function (e) {
 ////🚧///NEW SECTION///🚧////
 //////////////////////////////
 // * 3.0 Smooth scrolling
-// With Event Delegation
-// Add event listener to common parent element
-// Determine what element originated the event
+// With Event Delegation, ddd event listener to common parent element, determine what element originated the event
 
 // document.querySelector("body").addEventListener("click", function (e) {
 //   console.log(e.target);
@@ -82,12 +80,16 @@ document
     }
   });
 
-// ? Without Event Delegation
-// document.querySelectorAll(".nav__link").forEach(function (el) {
+// 3.1 Without Event Delegation
+// const navZ = document.querySelectorAll(".nav__link");
+
+// navZ.forEach(function (el) {
 //   el.addEventListener("click", function (e) {
 //     e.preventDefault();
-//     const id = this.getAttribute("href");
-//     console.log(id);
+
+//     // const id = this.getAttribute("href"); // either this. or el.
+//     const id = el.getAttribute("href");
+//     console.log(id); // #section--#
 
 //     document.querySelector(id).scrollIntoView({
 //       behavior: "smooth",
@@ -106,7 +108,7 @@ btnScrollTo.addEventListener("click", function (e) {
   // New way , smooth scrolling
   section1.scrollIntoView({ behavior: "smooth" });
 
-  // Old way , smooth scrolling
+  // 4.2 Old way , smooth scrolling
   // window.scrollTo({
   //   left: section1coords.left + window.pageXOffset,
   //   top: section1coords.top + window.pageYOffset,
@@ -132,31 +134,38 @@ btnScrollTo.addEventListener("click", function (e) {
 //////////////////////////////
 ////🚧///NEW SECTION///🚧////
 //////////////////////////////
-// * 5.0 Tabbed Component
+// * 5.0 Tabbed Component with Event Delegation
 
-// TODO With event Delegation
+// Attach a click event listener to the tabs container
 tabsContainer.addEventListener("click", function (e) {
-  const clicked = e.target.closest(".operations__tab");
-  console.log(clicked);
+  // Find the nearest ancestor element with the class "operations__tab" from the clicked target
+  const clickedTab = e.target.closest(".operations__tab");
 
-  // Guard clause
-  if (!clicked) return;
+  // If no matching tab is found, exit early
+  if (!clickedTab) {
+    return;
+  }
 
-  // TODO 5.1 Remove Active classes
-  // Remove all button hoverings
-  tabs.forEach((t) => t.classList.remove("operations__tab--active"));
-  // Remove all content from all tabs
-  tabsContent.forEach((t) => t.classList.remove("operations__content--active"));
+  // 5.1 REMOVE EVERYTHING
+  // Remove the "operations__tab--active" class from all tabs
+  tabs.forEach((tab) => tab.classList.remove("operations__tab--active"));
 
-  // TODO 5.2 Add active classes
-  console.log(clicked.dataset.tab);
+  // Remove the "operations__content--active" class from all content sections
+  tabsContent.forEach((content) =>
+    content.classList.remove("operations__content--active")
+  );
 
-  // Add button hovering to the clicked button
-  clicked.classList.add("operations__tab--active");
-  // Add content showing to the clicked button
-  document
-    .querySelector(`.operations__content--${clicked.dataset.tab}`)
-    .classList.add("operations__content--active");
+  // 5.2 ADD EVERYTHING
+  // Add the "operations__tab--active" class to the clicked tab for button hovering
+  clickedTab.classList.add("operations__tab--active");
+
+  // Add the "operations__content--active" class to the corresponding content section
+  const clickedTabContent = document.querySelector(
+    `.operations__content--${clickedTab.dataset.tab}`
+  );
+  if (clickedTabContent) {
+    clickedTabContent.classList.add("operations__content--active");
+  }
 });
 
 // Without event delegation
@@ -188,26 +197,38 @@ tabsContainer.addEventListener("click", function (e) {
 // nav.addEventListener("mouseover", handleHover.bind(0.5));
 // nav.addEventListener("mouseout", handleHover.bind(1));
 
-// Less Complicated
-const handleHover = function (e, opacity) {
-  if (e.target.classList.contains("nav__link")) {
-    const siblings = e.target.closest(".nav").querySelectorAll(".nav__link");
-    const logo = e.target.closest(".nav").querySelector("img");
+// 6.1 Less Complicated
+// Function to handle link and logo opacity on hover
+const handleNavHover = function (event, opacity) {
+  // Check if the hovered element has the class "nav__link"
+  if (event.target.classList.contains("nav__link")) {
+    // Find the nearest nav element for context
+    const navElement = event.target.closest(".nav");
 
-    siblings.forEach((el) => {
-      if (el !== e.target) el.style.opacity = opacity;
+    // Select all nav links and logo within the nav element
+    const navLinks = navElement.querySelectorAll(".nav__link");
+    const logo = navElement.querySelector("img");
+
+    // Adjust opacity for all nav links except the hovered one
+    navLinks.forEach((link) => {
+      if (link !== event.target) {
+        link.style.opacity = opacity;
+      }
     });
 
+    // Adjust logo opacity
     logo.style.opacity = opacity;
   }
 };
 
-nav.addEventListener("mouseover", function (e) {
-  handleHover(e, 0.5);
+// Add event listener for mouseover (hover) on the nav element
+nav.addEventListener("mouseover", function (event) {
+  handleNavHover(event, 0.5); // Reduce opacity on hover
 });
 
-nav.addEventListener("mouseout", function (e) {
-  handleHover(e, 1);
+// Add event listener for mouseout (hover out) on the nav element
+nav.addEventListener("mouseout", function (event) {
+  handleNavHover(event, 1); // Restore full opacity when hover out
 });
 
 //////////////////////////////
