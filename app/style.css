@@ -278,7 +278,6 @@ h4 {
 .operations__tab-container {
   display: flex;
   justify-content: center;
-  border: 2px solid pink;
 }
 
 .operations__tab {
