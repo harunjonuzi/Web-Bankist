@@ -1,6 +1,6 @@
-## Website | Bankist
+## Website - Bankist
 
--   This project is an extension of the prior endeavor, app-bankist, which I developed by synthesizing the insights gained from a series of educational courses. The objective herein was to craft an application that emulates an authentic user experience within the realm of banking systems.
+💻️ Landing page for taking down the competition between Bank of America and Bankist.
 
 ## Features
 
